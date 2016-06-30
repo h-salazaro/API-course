@@ -1,15 +1,11 @@
-require './protection_proxy'
-class User
-  attr_accessor :name, :email, :membership_level
+class User < ActiveRecord::Base
 
-  def initialize(name, email, membership_level)
-    @name = name
-    @email = email
-    @membership_level = membership_level
+  def updater_for(obj)
+    find_updator(user_role, obj.class)
   end
-end
 
-class UserAsBookStoreOwner < ProtectionProxy
-  writable :membership_level
+  def find_updator(role, klass)
+
+  end
 
 end

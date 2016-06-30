@@ -1,9 +1,29 @@
 require 'spec_helper'
-require_relative '../user'
 describe ProtectionProxy do
 
+  class User
+    attr_accessor :name, :email, :membership_level
+
+    def initialize(name, email, membership_level)
+      @name = name
+      @email = email
+      @membership_level = membership_level
+    end
+  end
+
+  class ProtectedUser < ProtectionProxy
+    role :owner do
+      writable :membership_level
+    end
+
+    role :browser do
+      writable :name, :email
+    end
+
+  end
+
   let(:user) { User.new("Tom", "tom@waits.com", "Rookie") }
-  let(:proxy) { UserAsBookStoreOwner.new(user) }
+  let(:proxy) { ProtectedUser.find_proxy(user, :owner) }
 
   it 'assigns attributes properly' do
     expect(proxy.name).to eq "Tom"
@@ -19,11 +39,6 @@ describe ProtectionProxy do
       proxy.name = "Joe"
       expect(proxy.name).to eq "Tom"
     end
-
-    it 'can access a normally defined method' do
-      expect(proxy.class).to eq User
-    end
   end
-
  
 end

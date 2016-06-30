@@ -10,12 +10,10 @@ class ProtectionProxy
     new(object, writable_fields[role])
   end
 
-  def self.target_class(klass)
-    @target_class = klass
-  end
-
   def self.writable(*names)
-    @current_list = names
+    names.each do |name|
+      @current_list << name
+    end
   end
 
   def self.writable_fields
